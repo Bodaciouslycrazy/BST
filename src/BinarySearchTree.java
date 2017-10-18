@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 // Binary Search Tree Class
 //
 // CONSTRUCTION: with no initializer
@@ -19,6 +22,7 @@
  * Note that all "matching" is based on the compareTo method.
  * @author Mark Allen Weiss
  */
+
 public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
 {
     /**
@@ -51,10 +55,10 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
      * Find the smallest item in the tree.
      * @return smallest item or null if empty.
      */
-    public AnyType findMin( )
+    public AnyType findMin( ) throws Exception
     {
         if( isEmpty( ) )
-            throw new UnderflowException( );
+            throw new Exception( "Underflow Exception" );
         return findMin( root ).element;
     }
 
@@ -62,10 +66,10 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
      * Find the largest item in the tree.
      * @return the largest item of null if empty.
      */
-    public AnyType findMax( )
+    public AnyType findMax( ) throws Exception
     {
         if( isEmpty( ) )
-            throw new UnderflowException( );
+            throw new Exception( "Underflow Exception");
         return findMax( root ).element;
     }
 
@@ -231,6 +235,193 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
             return 1 + Math.max( height( t.left ), height( t.right ) );    
     }
     
+    
+    //==========================================
+    // Code Added by Bodie Malik
+    //==========================================
+    
+    //Just a helper function.
+    public int nodeCount()
+    {
+    	return nodeCountRecursive(root);
+    }
+    
+    
+    //recursively searches through tree. Adds one at every node.
+    private int nodeCountRecursive(BinaryNode<AnyType> node)
+    {
+    	if(node == null)
+    		return 0;
+    	else
+    	{
+    		return 1 + nodeCountRecursive(node.left) + nodeCountRecursive(node.right);
+    	}
+    }
+    
+    
+    
+    public boolean isFull()
+    {
+    	return isFullRecursive(root);
+    }
+    
+    private boolean isFullRecursive(BinaryNode<AnyType> node)
+    {
+    	if(node == null)
+    		return true;
+    	else if( (node.left == null) != (node.right == null) )
+    		return false;
+    	else
+    	{
+    		return( isFullRecursive(node.left) && isFullRecursive(node.right));
+    	}
+    }
+    
+    
+    
+    public boolean compareStructure(BinarySearchTree other)
+    {
+    	return compStrucRecursive(root, other.root);
+    }
+    
+    private boolean compStrucRecursive(BinaryNode nodea, BinaryNode nodeb)
+    {
+    	if(nodea == null && nodeb == null)
+    		return true;
+    	else if(nodea == null || nodeb == null)
+    		return false;
+    	else
+    		return compStrucRecursive(nodea.left, nodeb.left) && compStrucRecursive(nodea.right, nodeb.right);
+    }
+    
+    
+    
+    public boolean equals(BinarySearchTree<AnyType> other)
+    {
+    	return equalsRecursive(root, other.root);
+    }
+    
+    private boolean equalsRecursive(BinaryNode<AnyType> nodea, BinaryNode<AnyType> nodeb)
+    {
+    	if(nodea == null && nodeb == null)
+    		return true;
+    	else if(nodea == null || nodeb == null)
+    		return false;
+    	else if(nodea.element == nodeb.element)
+    		return equalsRecursive(nodea.left, nodeb.left) && equalsRecursive(nodea.right, nodeb.right);
+    	else
+    		return false;
+    }
+    
+    
+    
+    public BinarySearchTree<AnyType> copy()
+    {
+    	BinarySearchTree<AnyType> newtree = new BinarySearchTree<AnyType>();
+    	newtree.root = new BinaryNode<AnyType>(root.element);
+    	
+    	if(root != null)
+    		copyRecursive(root, newtree.root);
+    	
+    	return newtree;
+    }
+    
+    private void copyRecursive(BinaryNode<AnyType> node, BinaryNode<AnyType> nodecopy)
+    {
+    	if(node.left != null)
+    	{
+    		BinaryNode<AnyType> newnode = new BinaryNode<AnyType>(node.left.element);
+    		nodecopy.left = newnode;
+    		copyRecursive(node.left, nodecopy.left);
+    	}
+    	
+    	if(node.right != null)
+    	{
+    		BinaryNode<AnyType> newnode = new BinaryNode<AnyType>(node.right.element);
+    		nodecopy.right = newnode;
+    		copyRecursive(node.right, nodecopy.right);
+    	}
+    }
+    
+    
+    
+    public void mirror()
+    {
+    	mirrorRecursive(root);
+    }
+    
+    public void mirrorRecursive(BinaryNode<AnyType> node)
+    {
+    	if(node == null)
+    		return;
+    	
+    	BinaryNode<AnyType> temp = node.left;
+    	node.left = node.right;
+    	node.right = temp;
+    	
+    	mirrorRecursive(node.left);
+    	mirrorRecursive(node.right);
+    }
+    
+    
+    
+    public boolean isMirror(BinarySearchTree<AnyType> other) //throws Exception
+    {
+    	other.mirror();
+    	boolean ism = equals(other);
+    	other.mirror();
+    	return ism;
+    }
+    
+    
+    public void rotateRight(AnyType val)
+    {
+    	
+    }
+    
+    public void rotateLeft(AnyType val)
+    {
+    	
+    }
+    
+    
+    
+    public void printLevels()
+    {
+    	Queue<BinaryNode<AnyType>> qa = new LinkedList<BinaryNode<AnyType>>();
+    	Queue<BinaryNode<AnyType>> qb = new LinkedList<BinaryNode<AnyType>>();
+    	
+    	if(root != null)
+    		qa.add(root);
+    	
+    	
+    	while( !qa.isEmpty() && !qb.isEmpty() )
+    	{
+	    	while( !qa.isEmpty() )
+	    	{
+	    		BinaryNode<AnyType> node = qa.poll();
+	    		
+	    		System.out.print(node.element + "  ");
+	    		
+	    		if(node.left != null)
+	    			qb.add(node.left);
+	    		if(node.right != null)
+	    			qb.add(node.right);
+	    		
+	    	}
+	    	
+	    	System.out.print("\n");
+	    	qa = qb;
+	    	qb = new LinkedList<BinaryNode<AnyType>>();
+    	}
+    	
+    	
+    }
+    
+    //============================================
+    // End of Bodie's Code
+    //============================================
+    
     // Basic node stored in unbalanced binary search trees
     private static class BinaryNode<AnyType>
     {
@@ -258,9 +449,10 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
 
 
         // Test program
-    public static void main( String [ ] args )
+    public static void main( String [ ] args ) throws Exception
     {
         BinarySearchTree<Integer> t = new BinarySearchTree<>( );
+        /*
         final int NUMS = 4000;
         final int GAP  =   37;
 
@@ -286,5 +478,6 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
             if( t.contains( i ) )
                 System.out.println( "Find error2!" );
         }
+        */
     }
 }
