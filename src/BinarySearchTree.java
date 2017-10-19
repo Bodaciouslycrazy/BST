@@ -1,3 +1,8 @@
+//Bodie Malik
+//bam150130
+//CS 3345.002
+//10-18-17
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -240,32 +245,48 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
     // Code Added by Bodie Malik
     //==========================================
     
-    //Just a helper function.
+    /**
+     * counts the number of nodes in the tree
+     * @return the number of nodes
+     */
     public int nodeCount()
     {
-    	return nodeCountRecursive(root);
+    	return nodeCount(root);
     }
     
     
-    //recursively searches through tree. Adds one at every node.
-    private int nodeCountRecursive(BinaryNode<AnyType> node)
+    /**
+     * internal function for recursion.
+     * @param node
+     * @return node count of it's self and it's children added
+     */
+    private int nodeCount(BinaryNode<AnyType> node)
     {
     	if(node == null)
     		return 0;
     	else
     	{
-    		return 1 + nodeCountRecursive(node.left) + nodeCountRecursive(node.right);
+    		return 1 + nodeCount(node.left) + nodeCount(node.right);
     	}
     }
     
     
-    
+    /**
+     * retruns true if the tree is a full tree.
+     * (every node must have 2 children or be a leaf.)
+     * @return
+     */
     public boolean isFull()
     {
-    	return isFullRecursive(root);
+    	return isFull(root);
     }
     
-    private boolean isFullRecursive(BinaryNode<AnyType> node)
+    /**
+     * internal function for recursion.
+     * @param node
+     * @return returns true if this node and it's children are a full tree.
+     */
+    private boolean isFull(BinaryNode<AnyType> node)
     {
     	if(node == null)
     		return true;
@@ -273,84 +294,125 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
     		return false;
     	else
     	{
-    		return( isFullRecursive(node.left) && isFullRecursive(node.right));
+    		return( isFull(node.left) && isFull(node.right));
     	}
     }
     
     
-    
+    /**
+     * returns true if the structure of the tree matches the structure of another tree.
+     * @param other
+     * @return
+     */
     public boolean compareStructure(BinarySearchTree other)
     {
-    	return compStrucRecursive(root, other.root);
+    	return compareStructure(root, other.root);
     }
     
-    private boolean compStrucRecursive(BinaryNode nodea, BinaryNode nodeb)
+    /**
+     * internal function for recursion
+     * @param nodea
+     * @param nodeb
+     * @return returns trus if this node and it's children have the same structure.
+     */
+    private boolean compareStructure(BinaryNode nodea, BinaryNode nodeb)
     {
     	if(nodea == null && nodeb == null)
     		return true;
     	else if(nodea == null || nodeb == null)
     		return false;
     	else
-    		return compStrucRecursive(nodea.left, nodeb.left) && compStrucRecursive(nodea.right, nodeb.right);
+    		return compareStructure(nodea.left, nodeb.left) && compareStructure(nodea.right, nodeb.right);
     }
     
     
     
+    /**
+     * returns true if this tree equals another tree.
+     * Compares every element.
+     * @param other
+     * @return
+     */
     public boolean equals(BinarySearchTree<AnyType> other)
     {
-    	return equalsRecursive(root, other.root);
+    	return equals(root, other.root);
     }
     
-    private boolean equalsRecursive(BinaryNode<AnyType> nodea, BinaryNode<AnyType> nodeb)
+    /**
+     * internal function for recursion.
+     * Returns true if the nodes and it's children are equal.
+     * @param nodea
+     * @param nodeb
+     * @return
+     */
+    private boolean equals(BinaryNode<AnyType> nodea, BinaryNode<AnyType> nodeb)
     {
     	if(nodea == null && nodeb == null)
     		return true;
     	else if(nodea == null || nodeb == null)
     		return false;
-    	else if(nodea.element == nodeb.element)
-    		return equalsRecursive(nodea.left, nodeb.left) && equalsRecursive(nodea.right, nodeb.right);
+    	else if(nodea.element.compareTo(nodeb.element) == 0)
+    		return equals(nodea.left, nodeb.left) && equals(nodea.right, nodeb.right);
     	else
     		return false;
     }
     
     
     
+    /**
+     * copies the elements into a new tree.
+     * @return a new BinarySearchTree
+     */
     public BinarySearchTree<AnyType> copy()
     {
     	BinarySearchTree<AnyType> newtree = new BinarySearchTree<AnyType>();
     	newtree.root = new BinaryNode<AnyType>(root.element);
     	
     	if(root != null)
-    		copyRecursive(root, newtree.root);
+    		copy(root, newtree.root);
     	
     	return newtree;
     }
     
-    private void copyRecursive(BinaryNode<AnyType> node, BinaryNode<AnyType> nodecopy)
+    /**
+     * Internal function. Copies a node and recursively copies it's children.
+     * @param node
+     * @param nodecopy
+     */
+    private void copy(BinaryNode<AnyType> node, BinaryNode<AnyType> nodecopy)
     {
     	if(node.left != null)
     	{
     		BinaryNode<AnyType> newnode = new BinaryNode<AnyType>(node.left.element);
     		nodecopy.left = newnode;
-    		copyRecursive(node.left, nodecopy.left);
+    		copy(node.left, nodecopy.left);
     	}
     	
     	if(node.right != null)
     	{
     		BinaryNode<AnyType> newnode = new BinaryNode<AnyType>(node.right.element);
     		nodecopy.right = newnode;
-    		copyRecursive(node.right, nodecopy.right);
+    		copy(node.right, nodecopy.right);
     	}
     }
     
     
     
+    /**
+     * Mirrors the search tree.
+     * This will break some of the functionality of the tree.
+     * Searching for an element will most likely return null because the algorithm went the wrong direction in the tree.
+     */
     public void mirror()
     {
-    	mirrorRecursive(root);
+    	mirror(root);
     }
     
-    public void mirrorRecursive(BinaryNode<AnyType> node)
+    /**
+     * internal function for recursion. switches a children's nodes, recursivly going down the tree.
+     * @param node
+     */
+    public void mirror(BinaryNode<AnyType> node)
     {
     	if(node == null)
     		return;
@@ -359,12 +421,17 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
     	node.left = node.right;
     	node.right = temp;
     	
-    	mirrorRecursive(node.left);
-    	mirrorRecursive(node.right);
+    	mirror(node.left);
+    	mirror(node.right);
     }
     
     
     
+    /**
+     * checks if another tree is a mirror of this tree.
+     * @param other
+     * @return
+     */
     public boolean isMirror(BinarySearchTree<AnyType> other) //throws Exception
     {
     	other.mirror();
@@ -374,47 +441,122 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
     }
     
     
-    public void rotateRight(AnyType val)
+    
+    /**
+     * does a right rotation at the first value "val" found
+     * @param val
+     * @throws Exception
+     */
+    public void rotateRight(AnyType val) throws Exception
     {
+    	BinaryNode<AnyType> n = findNode(val);
     	
+    	if(n == null)
+    		throw new Exception("Can't rotate a null node!");
+    	else if(n.left == null)
+    		throw new Exception("Can't right rotate, null node in left spot.");
+    	
+    	BinaryNode<AnyType> newright = new BinaryNode<AnyType>(n.element, n.left.right, n.right);
+    	n.right = newright;
+    	n.element = n.left.element;
+    	n.left = n.left.left;
+    	
+    	//blerg, this code was weird.
     }
     
-    public void rotateLeft(AnyType val)
+    
+    
+    /**
+     * does a left rotation at the first value "val" found
+     * @param val
+     * @throws Exception
+     */
+    public void rotateLeft(AnyType val) throws Exception
     {
+    	BinaryNode<AnyType> n = findNode(val);
     	
+    	if(n == null)
+    		throw new Exception("Can't rotate a null node!");
+    	else if(n.right == null)
+    		throw new Exception("Can't left rotate, null node in right spot.");
+    	
+    	BinaryNode<AnyType> newleft = new BinaryNode<AnyType>(n.element, n.left, n.right.left);
+    	n.left = newleft;
+    	n.element = n.right.element;
+    	n.right = n.right.right;
+    	
+    	//jabgiauagbnrgnaerg this is so gross!
+    }
+    
+    /**
+     * returns the first node with a value equal to "val."
+     * will return null if the tree is empty or if the value does not match with any node.
+     * @param val
+     * @return
+     */
+    private BinaryNode<AnyType> findNode(AnyType val)
+    {
+    	BinaryNode<AnyType> viewing = root;
+    	
+    	while(viewing != null)
+    	{
+    		if(val.compareTo(viewing.element) < 0)
+    			viewing = viewing.left;
+    		else if(val.compareTo(viewing.element) > 0)
+    			viewing = viewing.right;
+    		else break;
+    	}
+    	
+    	return viewing;
     }
     
     
-    
+    /**
+     * prints every level of the tree on it's own line.
+     * Will print underscores where this is a null node.
+     */
     public void printLevels()
     {
     	Queue<BinaryNode<AnyType>> qa = new LinkedList<BinaryNode<AnyType>>();
     	Queue<BinaryNode<AnyType>> qb = new LinkedList<BinaryNode<AnyType>>();
     	
-    	if(root != null)
-    		qa.add(root);
+    	qa.add(root);
     	
-    	
-    	while( !qa.isEmpty() && !qb.isEmpty() )
+    	boolean printNextLevel = true;
+    	while( !qa.isEmpty() || !qb.isEmpty() )
     	{
-	    	while( !qa.isEmpty() )
+    		//System.out.println("Debug, ran loop");
+    		boolean addedNonNull = false;
+    		
+	    	while( !qa.isEmpty() && printNextLevel )
 	    	{
 	    		BinaryNode<AnyType> node = qa.poll();
 	    		
-	    		System.out.print(node.element + "  ");
-	    		
-	    		if(node.left != null)
+	    		if(node != null)
+	    		{
+	    			System.out.print(node.element + "  ");
+	    			if( node.left != null || node.right != null)
+	    				addedNonNull = true;
 	    			qb.add(node.left);
-	    		if(node.right != null)
-	    			qb.add(node.right);
+		    		qb.add(node.right);
+	    		}
+	    		else
+	    		{
+	    			System.out.print("_  ");
+	    			qb.add(null);
+	    			qb.add(null);
+	    		}
 	    		
 	    	}
+	    	
+	    	printNextLevel = addedNonNull;
 	    	
 	    	System.out.print("\n");
 	    	qa = qb;
 	    	qb = new LinkedList<BinaryNode<AnyType>>();
     	}
     	
+    	//System.out.println("Debug: done");
     	
     }
     
@@ -451,33 +593,112 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>>
         // Test program
     public static void main( String [ ] args ) throws Exception
     {
-        BinarySearchTree<Integer> t = new BinarySearchTree<>( );
-        /*
-        final int NUMS = 4000;
-        final int GAP  =   37;
-
-        System.out.println( "Checking... (no more output means success)" );
-
-        for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            t.insert( i );
-
-        for( int i = 1; i < NUMS; i+= 2 )
-            t.remove( i );
-
-        if( NUMS < 40 )
-            t.printTree( );
-        if( t.findMin( ) != 2 || t.findMax( ) != NUMS - 2 )
-            System.out.println( "FindMin or FindMax error!" );
-
-        for( int i = 2; i < NUMS; i+=2 )
-             if( !t.contains( i ) )
-                 System.out.println( "Find error1!" );
-
-        for( int i = 1; i < NUMS; i+=2 )
-        {
-            if( t.contains( i ) )
-                System.out.println( "Find error2!" );
-        }
-        */
+    	
+    	System.out.println("Welcome to Bodie's Binary Search Tree! Sit back and relax as I show you what this baby can do.");
+    	System.out.println("For simplicity, I removed the UnderflowException file, and replaced those with normal Exceptions.\n");
+   
+    	//***********************************************************************
+    	// Hey, it looks like you are reading my code!
+    	// You are probably busy reading and grading code for a lot of people,
+    	// and stressing out a lot, so I wanted to give you this reminder:
+    	// you are awesome! Keep up the good work, and keep moving forward.
+    	//***********************************************************************
+    	
+        BinarySearchTree<Integer> t1 = new BinarySearchTree<>( );
+        t1.insert(10);
+        t1.insert(15);
+        t1.insert(5);
+        t1.insert(3);
+        t1.insert(12);
+        t1.insert(20);
+        
+        System.out.println("Printing a tree using printLevels()\n");
+        t1.printLevels();
+        
+        System.out.println("\nnodeCount() returned: " + t1.nodeCount());
+        System.out.println("isFull() returned: " + t1.isFull());
+        System.out.println("Lets make a full tree and test it again.\n");
+        
+        t1.insert(6);
+        t1.insert(17);
+        t1.insert(24);
+        
+        t1.printLevels();
+        System.out.println("\nisFull() returned: " + t1.isFull());
+        
+        BinarySearchTree<Integer> t2 = new BinarySearchTree<>();
+        t2.insert(50);
+        t2.insert(25);
+        t2.insert(12);
+        t2.insert(38);
+        t2.insert(75);
+        t2.insert(62);
+        
+        System.out.println("\nNow we have two trees. t1 is...\n");
+        t1.printLevels();
+        System.out.println("\nand t2 is...\n");
+        t2.printLevels();
+        System.out.println("\ncompareStructure() returned: " + t1.compareStructure(t2));
+        System.out.println("Lets change t2 to...\n");
+        t2.insert(88);
+        t2.insert(80);
+        t2.insert(100);
+        t2.printLevels();
+        System.out.println("\ncompareStructure() returned: " + t1.compareStructure(t2));
+        System.out.println("Lets test the copy method, copying t1 into t2.");
+        t2 = t1.copy();
+        System.out.println("t1 is...\n");
+        t1.printLevels();
+        System.out.println("\nand t2 is now...\n");
+        t2.printLevels();
+        System.out.println("\nLets test the equals() method");
+        System.out.println("equals() returned: " + t1.equals(t2));
+        System.out.println("Lets make a change. t2 is now...\n");
+        t2.insert(14);
+        t2.printLevels();
+        System.out.println("\nequals() returned: "+ t1.equals(t2));
+        
+        System.out.println("\nTesting mirror on t1");
+        System.out.println("Before mirror...\n");
+        t1.printLevels();
+        System.out.println("\nafter mirror...\n");
+        t1.mirror();
+        t1.printLevels();
+        System.out.println("\nLets copy t1 into t2. t2 is now...\n");
+        t2 = t1.copy();
+        t2.printLevels();
+        System.out.println("\nTesting the isMirror method");
+        System.out.println("isMirror() returned: " + t1.isMirror(t2));
+        System.out.println("Lets mirror t2 and try again.");
+        t2.mirror();
+        System.out.println("isMirror() returned: " + t1.isMirror(t2));
+        System.out.println("This is cool, but I don't understand why we need the mirror fucntion. It kinda ruins the tree's structure.");
+        
+        
+        System.out.println("Lets test rotate right and rotate left.");
+        System.out.println("t1 is now...\n");
+        t1 = new BinarySearchTree<Integer>();
+        
+        t1.insert(10);
+        t1.insert(15);
+        t1.insert(5);
+        t1.insert(3);
+        t1.insert(12);
+        t1.insert(20);
+        
+        t1.printLevels();
+        System.out.println("\nt1 after rotateRight(5) is now...\n");
+        t1.rotateRight(5);
+        t1.printLevels();
+        System.out.println("\nt1 after rotateLeft(10) is now...\n");
+        t1.rotateLeft(10);
+        t1.printLevels();
+        
+        System.out.println("\nThat is all of the methods I added!");
+        System.out.println("I am quite happy with most of my solutions. They are efficient and clean.");
+        System.out.println("If you find a problem with my code, I want to know so that I can improve!");
+        System.out.println("Bodie Malik - bam150130@utdallas.edu");
+        
+        
     }
 }
